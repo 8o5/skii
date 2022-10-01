@@ -2,17 +2,19 @@ import time
 
 import requests
 from bs4 import BeautifulSoup
-from discord_webhook import DiscordWebhook, DiscordEmbed
+import toml
+from discord_webhook import DiscordEmbed, DiscordWebhook
 
+config = toml.load("config.toml")
 
-url = "https://www.polyphia.com/products/remember-that-you-will-die-genesis-variant-lp"
+webhook = DiscordWebhook(
+                        url=config['webhook']
+    )
 
 def notify():
-    webhook = DiscordWebhook(
-                        url="https://discord.com/api/webhooks/1025673303005855814/OZ64uC8kVtigwp6gH_OkeVt4syRp8VHX6Lk6qNPmZINO_QW42e-EZdVBGUMy6ugzsxCB")
 
     embed = DiscordEmbed(
-                            title=f'🎉 ITEM INSTOCK', description='', color='161955')
+                            title=f'🎉 ITEM INSTOCK', description='', color='7CFC00')
 
     embed.set_author(name=f"Polyphia", url='https://www.polyphia.com/',
                     icon_url='https://cdn.shopify.com/s/files/1/0271/6018/2883/files/POLYPHIA_OW-3_180x.png?v=1657731615')  # set author
@@ -26,9 +28,10 @@ def notify():
 
     embed.set_timestamp()  # set timestamp (default is now)
 
-    embed.add_embed_field(name='URL', value=f"{url}s", inline=False)
+    embed.add_embed_field(name='URL', value=f"{config['url']}s", inline=False)
 
     webhook.add_embed(embed)
+    webhook.set_content(f"<@{config['my_id']}>")
     webhook.execute()
 
 
@@ -43,35 +46,50 @@ def check(url, headers):
 
     data.raise_for_status()
 
+
     if data.status_code != 200:
-        print(
-            f"ERROR {data.status_code}: UNABLE TO LOAD PAGE",
-            end="\r",
-        )
+        embed = DiscordEmbed(
+                            title=f'❌ ERROR {data.status_code}', description=f'@{config["my_id"]}', color='EE4B2B')
+
+        embed.set_author(name=f"Polyphia", url='https://www.polyphia.com/',
+                        icon_url='https://cdn.shopify.com/s/files/1/0271/6018/2883/files/POLYPHIA_OW-3_180x.png?v=1657731615')  # set author
+
+        embed.set_image(url='')  # set image
+
+        embed.set_thumbnail(url='')  # set thumbnail
+
+        embed.set_footer(text='nic#0002',
+                        icon_url='https://cdn.discordapp.com/avatars/249547320306171907/d0f228743a5d8164043d75834abb755c.png')  # set footer
+
+        embed.set_timestamp()  # set timestamp (default is now)
+
+        embed.add_embed_field(name='URL', value=f"{config['url']}s", inline=False)
+
+        webhook.add_embed(embed)
+        webhook.set_content(f"<@{config['my_id']}>")
+        webhook.execute()
+
+        print(data.status_code)
+        exit()
 
     elif data.status_code == 200:
 
         x = BeautifulSoup(data.content, "html.parser")
 
-        try:
-            status = x.find_all(attrs={"aria-label": "Sold out"})
-
-            if len(status) == 0:
-                raise TypeError
-
-            time.ctime()
-            print(
-                f"[{time.ctime()}] -- OOS"
-            )
-
-        except:
-            status = x.find_all(attrs={"aria-label": "Add to cart"})
+        status = x.find(attrs={"aria-label": "Sold out"})
             
+        if status is None:
+            notify()
             time.ctime()
             print(
                 f"[{time.ctime()}] -- INSTOCK"
             )
-            notify()
+            return
+        else:
+            time.ctime()
+            print(
+                f"[{time.ctime()}] -- OOS"
+            )
 
 
 headers = {
@@ -79,12 +97,33 @@ headers = {
 }
 
 print(
-    f"SCANNING {url}"
+    f"SCANNING {config['url']}"
 )
+
+embed = DiscordEmbed(
+                        title=f'🔎 STARTED SCANNING', description='', color='161955')
+
+embed.set_author(name=f"Polyphia", url='https://www.polyphia.com/',
+                icon_url='https://cdn.shopify.com/s/files/1/0271/6018/2883/files/POLYPHIA_OW-3_180x.png?v=1657731615')  # set author
+
+embed.set_image(url='')  # set image
+
+embed.set_thumbnail(url='https://cdn.shopify.com/s/files/1/0271/6018/2883/products/WHITE_SILVERSMUSH_1024x1024@2x.png?v=1662044356')  # set thumbnail
+
+embed.set_footer(text='nic#0002',
+                icon_url='https://cdn.discordapp.com/avatars/249547320306171907/d0f228743a5d8164043d75834abb755c.png')  # set footer
+
+embed.set_timestamp()  # set timestamp (default is now)
+
+embed.add_embed_field(name='URL', value=f"{config['url']}s", inline=False)
+
+webhook.add_embed(embed)
+webhook.set_content(f"<@{config['my_id']}>")
+webhook.execute()
 
 while True:
     check(
-        url=url, 
-        headers=headers
+        url=config['url'], 
+        headers=headers,
         )
     time.sleep(60)
