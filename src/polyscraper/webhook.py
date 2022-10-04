@@ -6,10 +6,14 @@ from .scrape import scrape
 if config["settings"]["webhooks"] == True:
     webhook = discord.SyncWebhook.from_url(config["discord"]["webhook"])
 
-def startScanning(product_image, product_title):
+
+def startScanning(product_image, product_title, link):
     embed = discord.Embed(
-            title=f"🔎 STARTED SCANNING", color=0x161955, timestamp=discord.utils.utcnow(), description=product_title
-        )
+        title=f"🔎 STARTED SCANNING",
+        color=0x161955,
+        timestamp=discord.utils.utcnow(),
+        description=product_title,
+    )
 
     embed.set_author(
         name="Polyphia",
@@ -19,9 +23,7 @@ def startScanning(product_image, product_title):
 
     embed.set_image(url="")  # set image
 
-    embed.set_thumbnail(
-        url=product_image
-    )  # set thumbnail
+    embed.set_thumbnail(url=product_image)  # set thumbnail
 
     embed.set_footer(
         text="nic#0002",
@@ -30,16 +32,18 @@ def startScanning(product_image, product_title):
 
     embed.add_field(name="URL", value=link, inline=False)
 
-    webhook.send(
-        content=f"<@{mention}>", 
-        embed=embed)
+    webhook.send(content="", embed=embed)
+
 
 def notify():
-    
+
     if config["settings"]["webhooks"] == True:
 
         embed = discord.Embed(
-            title=f"🎉 ITEM INSTOCK", color=0xCFC00, timestamp=discord.utils.utcnow(), description=scrape[1]
+            title=f"🎉 ITEM INSTOCK",
+            color=0xCFC00,
+            timestamp=discord.utils.utcnow(),
+            description=scrape[1],
         )
 
         embed.set_author(
@@ -50,26 +54,25 @@ def notify():
 
         embed.set_image(url="")  # set image
 
-        embed.set_thumbnail(
-            url=scrape[0]
-        )  # set thumbnail
+        embed.set_thumbnail(url=scrape[0])  # set thumbnail
 
         embed.set_footer(
             text="nic#0002",
             icon_url="https://cdn.discordapp.com/avatars/249547320306171907/d0f228743a5d8164043d75834abb755c.png",
         )  # set footer
 
-        embed.add_field(name="URL", value=config['url']['url'], inline=False)
+        embed.add_field(name="URL", value=config["url"]["url"], inline=False)
 
         webhook.send(content=f"<@{config['discord']['my_id']}>", embed=embed)
-        
+
+
 def dataError(data):
     embed = discord.Embed(
         title=f"❌ ERROR {data.status_code}",
         description=f'<@{config["my_id"]}>',
         color=0xEE4B2B,
         timestamp=discord.utils.utcnow(),
-            )
+    )
 
     embed.set_author(
         name=f"Polyphia",
