@@ -31,8 +31,8 @@ def run(link, scrape):
         if status is None:
             notify()
             time.ctime()
-            print(f"{colortime()}{scrape[1]} -- {color(style='green', text='INSTOCK')}")
+            print(f"{colortime()}[{color(style='green', text='INSTOCK')}] {scrape[1]}")
             return
         else:
             time.ctime()
-            print(f"{colortime()}{scrape[1]} -- {color(style='fail', text='OUT OF STOCK')}")
+            print(f"{colortime()}[{color(style='fail', text='OUT OF STOCK')}] {scrape[1]}")

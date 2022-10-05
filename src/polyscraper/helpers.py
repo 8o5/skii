@@ -1,6 +1,5 @@
 import os
 import time
-import discord
 import toml
 
 link = 0

@@ -40,8 +40,11 @@ while True:
         )
 
         link = link + 1
+        
+        print(f"{colortime()}Waiting {color(style='blue', text=config['settings']['cooldown'])} seconds")
+        
+        time.sleep(config["settings"]["cooldown"])
 
     else:
         link = 0
         time.sleep(config["settings"]["cooldown"])
-        cls()

@@ -6,7 +6,7 @@ url = [
 ]
 
 [settings]
-cooldown=60
+cooldown=30
 webhooks=true
 
 [discord]
