@@ -3,13 +3,16 @@ import time
 from bs4 import BeautifulSoup
 
 from .helpers import color, colortime, config, headers
-from .scrape import check, scrapeData
+from .scrape import check
 from .webhook import dataError, notify
 
 
 def run(link, scrape):
         
-    data = scrapeData(check(url=link, headers=headers))
+    data = check(
+        url=link,
+        headers=headers,
+    )
     
     if data.status_code != 200: # site response error handling
     
