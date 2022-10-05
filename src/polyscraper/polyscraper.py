@@ -1,38 +1,16 @@
 import time
 
-from bs4 import BeautifulSoup
-
-from .helpers import color, colortime, config, headers
-from .scrape import check
-from .webhook import dataError, notify
+from .helpers import color, colortime
+from .webhook import notify
 
 
-def run(link, scrape):
-        
-    data = check(
-        url=link,
-        headers=headers,
-    )
-    
-    if data.status_code != 200: # site response error handling
-    
-        if config["settings"]["webhooks"] == True:
-            dataError(data)
-        
-        print(data.status_code)
-        exit()
+def run(data):
+    if data[2] is False:
+        notify(data)
+        time.ctime()
+        print(f"{colortime()}[{color(style='green', text='INSTOCK')}] {data[1]}")
 
-    elif data.status_code == 200:
-
-        x = BeautifulSoup(data.content, "html.parser")
-
-        status = x.find(attrs={"aria-label": "Sold out"})
-
-        if status is None:
-            notify()
-            time.ctime()
-            print(f"{colortime()}[{color(style='green', text='INSTOCK')}] {scrape[1]}")
-            return
-        else:
-            time.ctime()
-            print(f"{colortime()}[{color(style='fail', text='OUT OF STOCK')}] {scrape[1]}")
+    elif data[2] is True:
+        time.ctime()
+        print(f"{colortime()}[{color(style='fail', text='OUT OF STOCK')}] {data[1]}")
+    return data

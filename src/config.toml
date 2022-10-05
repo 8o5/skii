@@ -6,8 +6,8 @@ url = [
 ]
 
 [settings]
-cooldown=30
-webhooks=true
+cooldown=25
+webhooks=false
 
 [discord]
 webhook="https://discord.com/api/webhooks/1025673303005855814/OZ64uC8kVtigwp6gH_OkeVt4syRp8VHX6Lk6qNPmZINO_QW42e-EZdVBGUMy6ugzsxCB" 

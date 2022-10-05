@@ -1,7 +1,6 @@
 import discord
 
-from .helpers import config, link, mention
-from .scrape import scrape
+from .helpers import color, config
 
 if config["settings"]["webhooks"] == True:
     webhook = discord.SyncWebhook.from_url(config["discord"]["webhook"])
@@ -32,10 +31,17 @@ def startScanning(product_image, product_title, link):
 
     embed.add_field(name="URL", value=link, inline=False)
 
-    webhook.send(content="", embed=embed)
+    try:
+        webhook.send(content="", embed=embed)
+        
+    except Exception as exception:
+        print(
+            f"{color(style='fail', text='WEBHOOK ERROR: ')} {exception.args[0].args[1].args[1]}"
+            )
+        exit()
 
 
-def notify():
+def notify(data):
 
     if config["settings"]["webhooks"] == True:
 
@@ -43,7 +49,7 @@ def notify():
             title=f"🎉 ITEM INSTOCK",
             color=0xCFC00,
             timestamp=discord.utils.utcnow(),
-            description=scrape[1],
+            description=data[1],
         )
 
         embed.set_author(
@@ -54,7 +60,7 @@ def notify():
 
         embed.set_image(url="")  # set image
 
-        embed.set_thumbnail(url=scrape[0])  # set thumbnail
+        embed.set_thumbnail(url=data[0])  # set thumbnail
 
         embed.set_footer(
             text="nic#0002",
@@ -63,7 +69,14 @@ def notify():
 
         embed.add_field(name="URL", value=config["url"]["url"], inline=False)
 
-        webhook.send(content=f"<@{config['discord']['my_id']}>", embed=embed)
+        try:
+            webhook.send(content=f"<@{config['discord']['my_id']}>", embed=embed)
+            
+        except Exception as exception:
+            print(
+                f"{color(style='fail', text='WEBHOOK ERROR: ')} {exception.args[0].args[1].args[1]}"
+                )
+            exit()
 
 
 def dataError(data):
@@ -91,4 +104,11 @@ def dataError(data):
 
     embed.add_field(name="URL", value=f"{config['url']}s", inline=False)
 
-    webhook.send(content=f"<@{config['my_id']}>", embed=embed)
+    try:
+        webhook.send(content=f"<@{config['my_id']}>", embed=embed)
+        
+    except Exception as exception:
+        print(
+            f"{color(style='fail', text='WEBHOOK ERROR: ')} {exception.args[0].args[1].args[1]}"
+            )
+        exit()
