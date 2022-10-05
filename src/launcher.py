@@ -5,8 +5,6 @@ from polyscraper.polyscraper import run
 from polyscraper.scrape import scrapeData
 from polyscraper.webhook import startScanning
 
-link = 0
-
 
 def startup():
 
@@ -35,25 +33,15 @@ startup()
 
 while True:
 
-    run(link=config["url"][link], scrape=scrapeData(link=config["url"][link]))
+    if link < len(config["url"]):
+        run(
+            link=config["url"][link],
+            scrape=scrapeData(link=config["url"][link]),
+        )
 
-    if link == len(config["url"]):
-        link = 1
+        link = link + 1
 
     else:
-        while link < len(config["url"]):
-
-            if link == (len(config["url"]) - 1):
-                link = 0
-                break
-
-            else:
-                link = link + 1
-
-                run(
-                    link=config["url"][link],
-                    scrape=scrapeData(link=config["url"][link]),
-                )
-
-    time.sleep(config["settings"]["cooldown"])
-    cls()
+        link = 0
+        time.sleep(config["settings"]["cooldown"])
+        cls()

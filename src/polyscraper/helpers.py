@@ -1,7 +1,9 @@
 import os
 import time
-
+import discord
 import toml
+
+link = 0
 
 
 class bcolors:
@@ -15,9 +17,11 @@ class bcolors:
     BOLD = "\033[1m"
     UNDERLINE = "\033[4m"
 
+
 def colortime():
     time.ctime()
     return f"{bcolors.HEADER}[{time.ctime()}] {bcolors.ENDC}"
+
 
 def color(style, text):
     if style == "fail":
@@ -30,10 +34,7 @@ def color(style, text):
         return f"{bcolors.OKGREEN}{text}{bcolors.ENDC}"
     if style == "warning":
         return f"{bcolors.WARNING}{text}{bcolors.ENDC}"
-    
-    
 
-link = 0
 
 headers = {
     "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/50.0.2661.102 Safari/537.36"
@@ -41,8 +42,8 @@ headers = {
 
 
 def cls():
-    os.system('cls' if os.name == 'nt' else 'clear')
-    
+    os.system("cls" if os.name == "nt" else "clear")
+
 
 config = toml.load("src/config.toml")
 
