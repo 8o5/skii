@@ -45,7 +45,7 @@ def scrapeData(link):
         if collection_location != None:
             collection_url = collection_location["href"]
         else:
-            dataError(data)
+            dataError(type="COLLECTION", data=collection_location)
             exit()
 
         product_image = f"https:{img_location[1]['src']}"
