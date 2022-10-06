@@ -1,4 +1,5 @@
 import time
+<<<<<<< Updated upstream
 from typing_extensions import reveal_type
 
 from polyscraper import (
@@ -12,6 +13,13 @@ from polyscraper import (
     scrapeCollection,
     startScanning,
 )
+=======
+
+from polyscraper.helpers import cls, colortime, color, config, link
+from polyscraper.polyscraper import run
+from polyscraper.scrape import scrapeData, scrapeCollections
+from polyscraper.webhook import startScanning
+>>>>>>> Stashed changes
 
 data = scrapeData(link=config["url"][link])
 
@@ -19,21 +27,24 @@ data = scrapeData(link=config["url"][link])
 def startup(data):
 
     cls()
-
-    collections = []
-
+    
     print(f"{color(style='blue', text='STARTED WITH SETTINGS:')} {config['settings']}")
 
     print("---")
+    
+    collections = scrapeCollections()
 
-    for i in config["url"]:
+    for i in collections:
 
         if data is None:
             exit()
 
+<<<<<<< Updated upstream
         collections.append(scrapeData(link=i))
         print(collections)  # debug
 
+=======
+>>>>>>> Stashed changes
         print(f"{color(style='green', text='SCANNING')} {data[1]}")
 
         if config["settings"]["webhooks"] == True:
@@ -43,11 +54,6 @@ def startup(data):
                 product_title=data[1],
                 link=i,
             )
-
-    collections = list(set(collections))
-
-    for z in collections:
-        scrapeCollection(collection=z)
 
     print("---")
 

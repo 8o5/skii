@@ -18,7 +18,7 @@ def scrapeData(link):
     if data.status_code != 200:  # site response error handling
 
         if config["settings"]["webhooks"] == True:
-            dataError(data)
+            dataError(type="DATA", data=data)
 
         print(data.status_code)
         exit()
@@ -37,6 +37,7 @@ def scrapeData(link):
             instock = True
         else:
             instock = False
+<<<<<<< Updated upstream
 
         collection_location = x.find(
             "a", class_="btn btn--secondary btn--has-icon-before"
@@ -47,20 +48,24 @@ def scrapeData(link):
         else:
             dataError(data=collection_location)
             exit()
+=======
+>>>>>>> Stashed changes
 
         product_image = f"https:{img_location[1]['src']}"
         product_title = title_location[0].text
 
-        return (product_image, product_title, instock, collection_url)
+        return (product_image, product_title, instock)
 
 
-def scrapeCollection(collection):
+def scrapeCollections():
+    
     try:
         data = requests.get(
-            url=f"https://www.polyphia.com/collections/{collection}",
+            url="https://www.polyphia.com/",
             headers=headers,
             timeout=5,
         )
+        
     except:
         dataError(data=data)  # type: ignore
         exit()
@@ -70,7 +75,7 @@ def scrapeCollection(collection):
     if data.status_code != 200:  # site response error handling
 
         if config["settings"]["webhooks"] == True:
-            dataError(data)
+            dataError(type= "DATA",data="https://www.polyphia.com/")
 
         print(data.status_code)
         exit()
@@ -78,9 +83,15 @@ def scrapeCollection(collection):
     elif data.status_code == 200:
         x = BeautifulSoup(data.content, "html.parser")
 
-        link_location = x.findAll(
-            "a",
-            class_="grid-view-item__link grid-view-item__image-container full-width-link",
+        collections_location = x.findAll(
+            "div",
+            class_="site-nav__dropdown critical-hidden site-nav__dropdown--left",
         )
+        
+        for colletion in collections_location:
+            collection_link = collection['href']
+            collections.append(collection_link)
+        
+        collections_location['href']
 
-        print(link_location)
+        print()
