@@ -2,8 +2,8 @@ import time
 
 from polyscraper.helpers import cls, colortime, color, config, link
 from polyscraper.polyscraper import run
-from polyscraper.scrape import scrapeCollection, scrapeData, scrapeStatic
-from polyscraper.webhook import dataError, startScanning
+from polyscraper.scrape import scrapeData, scrapeCollection
+from polyscraper.webhook import startScanning
 
 data = scrapeData(link=config["url"][link])
 
@@ -23,7 +23,8 @@ def startup(data):
         if data is None:
             exit()
 
-        collections.append(scrapeCollection(link=i))
+        collections.append(scrapeData(link=i))
+        print(collections) # debug
 
         print(f"{color(style='green', text='SCANNING')} {data[1]}")
 
@@ -38,7 +39,7 @@ def startup(data):
     collections = list(set(collections))
 
     for z in collections:
-        scrapeStatic(collection=z)
+        scrapeCollection(collection=z)
 
     print("---")
 
