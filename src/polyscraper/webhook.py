@@ -126,10 +126,10 @@ def dataError(type, data):
                 
                 exit()
                 
-        except Exception as exception:
+        except Exception as webhookexception:
             
             print(
-                f"{color(style='fail', text='WEBHOOK DATA ERROR: ')} {data}"
+                f"{color(style='fail', text='WEBHOOK DATA ERROR: ')} {webhookexception}"
             )
     
     else:

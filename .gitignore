@@ -1,2 +1,4 @@
 
 src/config.toml
+src/polyscraper/__pycache__
+.vscode
