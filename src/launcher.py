@@ -62,15 +62,13 @@ startup(data=data)
 
 
 while True:
-    link = 0  # @nic you should actually define it first so you don't get possibly unbound error
+    link = 0 
     if link < len(config["url"]):
         run(
             data=data,
         )
 
-        # link = link + 1
         link += 1
-        # @nic we can actually use this method of adding numbers instead
 
         print(
             f"{colortime()}Waiting {color(style='blue', text=config['settings']['cooldown'])} seconds"
