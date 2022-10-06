@@ -1,9 +1,17 @@
 import time
+from typing_extensions import reveal_type
 
-from polyscraper.helpers import cls, colortime, color, config, link
-from polyscraper.polyscraper import run
-from polyscraper.scrape import scrapeData, scrapeCollection
-from polyscraper.webhook import startScanning
+from polyscraper import (
+    cls,
+    colortime,
+    color,
+    config,
+    link,
+    run,
+    scrapeData,
+    scrapeCollection,
+    startScanning,
+)
 
 data = scrapeData(link=config["url"][link])
 
@@ -24,7 +32,7 @@ def startup(data):
             exit()
 
         collections.append(scrapeData(link=i))
-        print(collections) # debug
+        print(collections)  # debug
 
         print(f"{color(style='green', text='SCANNING')} {data[1]}")
 
@@ -48,13 +56,15 @@ startup(data=data)
 
 
 while True:
-
+    link = 0  # @nic you should actually define it first so you don't get possibly unbound error
     if link < len(config["url"]):
         run(
             data=data,
         )
 
-        link = link + 1
+        # link = link + 1
+        link += 1
+        # @nic we can actually use this method of adding numbers instead
 
         print(
             f"{colortime()}Waiting {color(style='blue', text=config['settings']['cooldown'])} seconds"

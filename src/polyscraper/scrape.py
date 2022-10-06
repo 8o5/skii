@@ -1,10 +1,8 @@
-from gc import collect
-from os import link
 import requests
 from bs4 import BeautifulSoup
 
-from polyscraper.helpers import config, headers
-from polyscraper.webhook import dataError
+from .helpers import config, headers
+from .webhook import dataError
 
 
 def scrapeData(link):
@@ -39,13 +37,15 @@ def scrapeData(link):
             instock = True
         else:
             instock = False
-            
-        collection_location = x.find("a", class_="btn btn--secondary btn--has-icon-before")
-        
+
+        collection_location = x.find(
+            "a", class_="btn btn--secondary btn--has-icon-before"
+        )
+
         if collection_location != None:
-            collection_url = collection_location["href"]
+            collection_url = collection_location["href"]  # type: ignore
         else:
-            dataError(type="COLLECTION", data=collection_location)
+            dataError(data=collection_location)
             exit()
 
         product_image = f"https:{img_location[1]['src']}"
@@ -62,7 +62,7 @@ def scrapeCollection(collection):
             timeout=5,
         )
     except:
-        dataError(data=data) # type: ignore
+        dataError(data=data)  # type: ignore
         exit()
 
     data.raise_for_status()

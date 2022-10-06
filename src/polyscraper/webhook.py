@@ -7,9 +7,9 @@ if config["settings"]["webhooks"] == True:
 
 
 def startScanning(product_image, product_title, link):
-    
+
     if config["settings"]["webhooks"] == True:
-        
+
         embed = discord.Embed(
             title=f"🔎 STARTED SCANNING",
             color=0x161955,
@@ -36,11 +36,11 @@ def startScanning(product_image, product_title, link):
 
         try:
             webhook.send(content="", embed=embed)
-            
+
         except Exception as exception:
             print(
                 f"{color(style='fail', text='WEBHOOK ERROR: ')} {exception.args[0].args[1].args[1]}"
-                )
+            )
             exit()
 
 
@@ -73,22 +73,23 @@ def notify(data):
         embed.add_field(name="URL", value=config["url"]["url"], inline=False)
 
         try:
-            
+
             webhook.send(content=f"<@{config['discord']['my_id']}>", embed=embed)
-            
+
         except Exception as exception:
-            
+
             print(
                 f"{color(style='fail', text='WEBHOOK ERROR: ')} {exception.args[0].args[1].args[1]}"
-                )
-            
+            )
+
             exit()
 
 
-def dataError(type, data):
-    
+# @nic I removed type from here because I only seeing you use it once, either come up with a better way of doing this or actually add the type everywhere
+def dataError(data):
+
     if config["settings"]["webhooks"] == True:
-        
+
         try:
             embed = discord.Embed(
                 title=f"❌ {type} ERROR {data.status_code}",
@@ -115,27 +116,25 @@ def dataError(type, data):
             embed.add_field(name="URL", value=f"{config['url']}s", inline=False)
 
             try:
-                
+
                 webhook.send(content=f"<@{config['my_id']}>", embed=embed)
-                
+
             except Exception as exception:
-                
+
                 print(
                     f"{color(style='fail', text='WEBHOOK ERROR: ')} {exception.args[0].args[1].args[1]}"
-                    )
-                
+                )
+
                 exit()
-                
+
         except Exception as webhookexception:
-            
+
             print(
                 f"{color(style='fail', text='WEBHOOK DATA ERROR: ')} {webhookexception}"
             )
-    
+
     else:
-        
-        print(
-                f"{color(style='fail', text=f'{type} ERROR: ')} {data}"
-                )
-        
+
+        print(f"{color(style='fail', text=f'{type} ERROR: ')} {data}")
+
         exit()

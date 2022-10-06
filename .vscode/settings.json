@@ -1,6 +1,0 @@
-{
-    "python.formatting.provider": "black",
-    "editor.formatOnSave": true,
-    "prettier.useTabs": true,
-    "workbench.tree.indent": 8
-}

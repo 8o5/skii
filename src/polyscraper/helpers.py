@@ -3,8 +3,6 @@ import time
 
 import toml
 
-link = 0
-
 
 class bcolors:
     HEADER = "\033[95m"
