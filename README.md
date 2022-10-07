@@ -13,6 +13,7 @@ basic monitor for https://polyphia.com
 * `webhook="link"` replace link with your own [webhook link](https://support.discord.com/hc/en-us/articles/228383668-Intro-to-Webhooks)
 * `my_id=numbers` replace numbers with your own [discord id](https://support.discord.com/hc/en-us/articles/206346498-Where-can-I-find-my-User-Server-Message-ID-#:~:text=Enabling%20Developer%20Mode%20%2D%20Mobile%20App,and%20turn%20on%20Developer%20Mode.)
 
+## example config
 ```
 products = [
     "https://www.polyphia.com/products/remember-that-you-will-die-genesis-variant-lp",
