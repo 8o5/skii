@@ -23,7 +23,7 @@ products = [
 
 [settings]
 cooldown=60 
-webhooks=false # enable or disable the sending of all discord webhooks
+webhooks=false
 
 [discord]
 webhook="https://discord.com/api/webhooks/example" 
