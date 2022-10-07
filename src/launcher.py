@@ -1,18 +1,10 @@
 import sys
 import time
 
-from polyscraper import (
-    cls,
-    color,
-    colortime,
-    config,
-    scrapeCollections,
-    scrapeProducts,
-    startScanning,
-    notify
-)
 
-link = 0
+from polyscraper.helpers import cls, colortime, color, config
+from polyscraper.scrape import scrapeCollections, scrapeProducts
+from polyscraper.webhook import startScanning, notify
 
 
 def startup():

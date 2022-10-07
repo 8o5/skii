@@ -76,7 +76,7 @@ def cls():
     os.system("cls" if os.name == "nt" else "clear")
 
 
-config = toml.load("src/config.toml")
+config = toml.load("config.toml")
 
 match config:
     case {
