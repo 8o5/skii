@@ -74,11 +74,7 @@ def notify(products, current):
             icon_url="https://cdn.discordapp.com/avatars/249547320306171907/d0f228743a5d8164043d75834abb755c.png",
         )  # set footer
 
-<<<<<<< Updated upstream
-        embed.add_field(name="URL", value=config["url"]["url"], inline=False)
-=======
         embed.add_field(name="URL", value=f"https://www.polyphia.com{products.get(current).url}", inline=False)
->>>>>>> Stashed changes
 
         try:
 

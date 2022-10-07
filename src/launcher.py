@@ -1,66 +1,41 @@
+import sys
 import time
-<<<<<<< Updated upstream
-from typing_extensions import reveal_type
 
 from polyscraper import (
     cls,
-    colortime,
     color,
+    colortime,
     config,
-<<<<<<< Updated upstream
-    link,
-    run,
-    scrapeData,
-    scrapeCollection,
-=======
     scrapeCollections,
     scrapeProducts,
->>>>>>> Stashed changes
     startScanning,
     notify
 )
-=======
 
-from polyscraper.helpers import cls, colortime, color, config, link
-from polyscraper.polyscraper import run
-from polyscraper.scrape import scrapeData, scrapeCollections
-from polyscraper.webhook import startScanning
->>>>>>> Stashed changes
-
-data = scrapeData(link=config["url"][link])
+link = 0
 
 
-def startup(data):
-
-<<<<<<< Updated upstream
+def startup():
     cls()
-    
     print(f"{color(style='blue', text='STARTED WITH SETTINGS:')} {config['settings']}")
-
     print("---")
-    
-    collections = scrapeCollections()
 
-    for i in collections:
+    collections = scrapeCollections(list_collections=[], all_list_collections=[])
 
-        if data is None:
-            exit()
+    if collections is None:
+        sys.exit("@nic handle your shit better i get so many typing errors")
 
-<<<<<<< Updated upstream
-        collections.append(scrapeData(link=i))
-        print(collections)  # debug
+    products = scrapeProducts()
 
-=======
->>>>>>> Stashed changes
-        print(f"{color(style='green', text='SCANNING')} {data[1]}")
-=======
+    if products is None:
+        sys.exit("see above message :middle_finger:")
+
     for i in config['products']:
 
         if i is None:
             sys.exit("No data found.")
 
         print(f"{color(style='green', text='SCANNING')} {products.get(i).name}")
->>>>>>> Stashed changes
 
         if config["settings"]["webhooks"] == True:
 
@@ -75,22 +50,10 @@ def startup(data):
     print("---")
 
 
-<<<<<<< Updated upstream
-startup(data=data)
-
-
-while True:
-    link = 0 
-    if link < len(config["url"]):
-        run(
-            data=data,
-        )
-=======
 startup()
 
 
 while True:
->>>>>>> Stashed changes
 
     products = scrapeProducts()
 
@@ -101,10 +64,6 @@ while True:
             time.ctime()
             print(f"{colortime()}[{color(style='green', text='INSTOCK')}] {products.get(i).name}")
 
-<<<<<<< Updated upstream
-        time.sleep(config["settings"]["cooldown"])
-        data = scrapeData(link=config["url"][link])
-=======
         else:
             time.ctime()
             print(f"{colortime()}[{color(style='fail', text='OOS')}] {products.get(i).name}")
@@ -112,6 +71,5 @@ while True:
     print(
         f"{colortime()}Waiting {color(style='blue', text=config['settings']['cooldown'])} seconds"
     )
->>>>>>> Stashed changes
 
     time.sleep(config["settings"]["cooldown"])

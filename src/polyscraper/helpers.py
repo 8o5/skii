@@ -1,5 +1,6 @@
 import os
 import time
+from typing import Any, Dict
 
 import toml
 
@@ -16,8 +17,6 @@ class bcolors:
     UNDERLINE = "\033[4m"
 
 
-<<<<<<< Updated upstream
-=======
 class Product:
     def __init__(self, data: Dict[Any, Any]):
         self._data = data  # _ before attr name means its private, we shouldn't be accessing it from outside this class.
@@ -47,25 +46,12 @@ class Product:
         return self._data["updated"]
 
 
->>>>>>> Stashed changes
 def colortime():
     time.ctime()
     return f"{bcolors.HEADER}[{time.ctime()}] {bcolors.ENDC}"
 
 
 def color(style, text):
-<<<<<<< Updated upstream
-    if style == "fail":
-        return f"{bcolors.FAIL}{text}{bcolors.ENDC}"
-    if style == "blue":
-        return f"{bcolors.OKBLUE}{text}{bcolors.ENDC}"
-    if style == "cyan":
-        return f"{bcolors.OKCYAN}{text}{bcolors.ENDC}"
-    if style == "green":
-        return f"{bcolors.OKGREEN}{text}{bcolors.ENDC}"
-    if style == "warning":
-        return f"{bcolors.WARNING}{text}{bcolors.ENDC}"
-=======
 
     colors = {
         "fail": f"{bcolors.FAIL}{text}{bcolors.ENDC}",
@@ -79,7 +65,6 @@ def color(style, text):
         return colors[style]
     except KeyError:
         raise Exception("Invalid style.")
->>>>>>> Stashed changes
 
 
 headers = {
@@ -95,13 +80,8 @@ config = toml.load("src/config.toml")
 
 match config:
     case {
-<<<<<<< Updated upstream
-        "url": list(),
-        "settings": {"webhooks": bool()},
-=======
         "products": list(),
         "settings": {"cooldown": int(), "webhooks": bool()},
->>>>>>> Stashed changes
         "discord": {"webhook": str(), "my_id": int()},
     }:
         pass
