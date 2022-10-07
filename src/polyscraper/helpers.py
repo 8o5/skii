@@ -16,12 +16,45 @@ class bcolors:
     UNDERLINE = "\033[4m"
 
 
+<<<<<<< Updated upstream
+=======
+class Product:
+    def __init__(self, data: Dict[Any, Any]):
+        self._data = data  # _ before attr name means its private, we shouldn't be accessing it from outside this class.
+
+    @property
+    def name(self) -> str:
+        return self._data["name"]
+
+    @property
+    def img(self) -> str:
+        return self._data["img"]
+        
+    @property
+    def url(self) -> str:
+        return self._data["url"]
+
+    @property
+    def instock(self) -> bool:
+        return self._data["instock"]
+
+    @property
+    def price(self) -> str:
+        return self._data["price"]
+
+    @property
+    def updated(self) -> str:
+        return self._data["updated"]
+
+
+>>>>>>> Stashed changes
 def colortime():
     time.ctime()
     return f"{bcolors.HEADER}[{time.ctime()}] {bcolors.ENDC}"
 
 
 def color(style, text):
+<<<<<<< Updated upstream
     if style == "fail":
         return f"{bcolors.FAIL}{text}{bcolors.ENDC}"
     if style == "blue":
@@ -32,6 +65,21 @@ def color(style, text):
         return f"{bcolors.OKGREEN}{text}{bcolors.ENDC}"
     if style == "warning":
         return f"{bcolors.WARNING}{text}{bcolors.ENDC}"
+=======
+
+    colors = {
+        "fail": f"{bcolors.FAIL}{text}{bcolors.ENDC}",
+        "blue": f"{bcolors.OKBLUE}{text}{bcolors.ENDC}",
+        "cyan": f"{bcolors.OKCYAN}{text}{bcolors.ENDC}",
+        "green": f"{bcolors.OKGREEN}{text}{bcolors.ENDC}",
+        "warning": f"{bcolors.WARNING}{text}{bcolors.ENDC}",
+    }
+
+    try:
+        return colors[style]
+    except KeyError:
+        raise Exception("Invalid style.")
+>>>>>>> Stashed changes
 
 
 headers = {
@@ -47,8 +95,13 @@ config = toml.load("src/config.toml")
 
 match config:
     case {
+<<<<<<< Updated upstream
         "url": list(),
         "settings": {"webhooks": bool()},
+=======
+        "products": list(),
+        "settings": {"cooldown": int(), "webhooks": bool()},
+>>>>>>> Stashed changes
         "discord": {"webhook": str(), "my_id": int()},
     }:
         pass

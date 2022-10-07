@@ -6,7 +6,7 @@ if config["settings"]["webhooks"] == True:
     webhook = discord.SyncWebhook.from_url(config["discord"]["webhook"])
 
 
-def startScanning(product_image, product_title, link):
+def startScanning(product_image, product_title, link, price, status):
 
     if config["settings"]["webhooks"] == True:
 
@@ -32,7 +32,11 @@ def startScanning(product_image, product_title, link):
             icon_url="https://cdn.discordapp.com/avatars/249547320306171907/d0f228743a5d8164043d75834abb755c.png",
         )  # set footer
 
-        embed.add_field(name="URL", value=link, inline=False)
+        embed.add_field(name="URL", value=link, inline=True)
+
+        embed.add_field(name="PRICE", value=price, inline=True)
+
+        embed.add_field(name="STATUS", value=status, inline=True)
 
         try:
             webhook.send(content="", embed=embed)
@@ -44,7 +48,7 @@ def startScanning(product_image, product_title, link):
             exit()
 
 
-def notify(data):
+def notify(products, current):
 
     if config["settings"]["webhooks"] == True:
 
@@ -52,7 +56,7 @@ def notify(data):
             title=f"🎉 ITEM INSTOCK",
             color=0xCFC00,
             timestamp=discord.utils.utcnow(),
-            description=data[1],
+            description=products.get(current).name,
         )
 
         embed.set_author(
@@ -63,14 +67,18 @@ def notify(data):
 
         embed.set_image(url="")  # set image
 
-        embed.set_thumbnail(url=data[0])  # set thumbnail
+        embed.set_thumbnail(url=products.get(current).img)  # set thumbnail
 
         embed.set_footer(
             text="nic#0002",
             icon_url="https://cdn.discordapp.com/avatars/249547320306171907/d0f228743a5d8164043d75834abb755c.png",
         )  # set footer
 
+<<<<<<< Updated upstream
         embed.add_field(name="URL", value=config["url"]["url"], inline=False)
+=======
+        embed.add_field(name="URL", value=f"https://www.polyphia.com{products.get(current).url}", inline=False)
+>>>>>>> Stashed changes
 
         try:
 
