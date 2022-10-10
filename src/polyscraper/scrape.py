@@ -21,7 +21,7 @@ def scrapeProducts():
     if data.status_code != 200:  # site response error handling
 
         if config["settings"]["webhooks"] == True:
-            dataError(type="DATA", data=data.url)
+            dataError(data=data.url)
 
         sys.exit(data.status_code)
 
@@ -74,7 +74,7 @@ def scrapeCollections(list_collections, all_list_collections):
     if data.status_code != 200:  # site response error handling
 
         if config["settings"]["webhooks"] == True:
-            dataError(type="DATA", data=data.url)
+            dataError(data=data.url)
 
         sys.exit(data.status_code)
 

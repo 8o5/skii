@@ -15,6 +15,12 @@ class bcolors:
     ENDC = "\033[0m"
     BOLD = "\033[1m"
     UNDERLINE = "\033[4m"
+    
+class placeholder:
+    img = "https://cdn.shopify.com/s/files/1/0271/6018/2883/files/POLYPHIA_OW-3_360x.png"
+    name = "Invalid URL in config.toml"
+    price = "$0.00 USD"
+    instock = "N/A"
 
 
 class Product:
@@ -76,7 +82,7 @@ def cls():
     os.system("cls" if os.name == "nt" else "clear")
 
 
-config = toml.load("config.toml")
+config = toml.load("src/config.toml")
 
 match config:
     case {
