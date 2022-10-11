@@ -5,7 +5,7 @@ import requests
 from bs4 import BeautifulSoup
 import time
 
-from polyphia.__init__ import __polyphiacollections__, __sites__
+from utils.__init__ import __polyphiacollections__, __sites__
 from utils.helpers import Product, config, headers
 from polyphia.webhook import dataError, newCollection
 

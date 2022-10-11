@@ -7,8 +7,8 @@ No description, website, or topics provided.
 """
 
 from utils.helpers import *
-from .scrape import *
-from .webhook import *
+from polyphia.scrape import *
+from polyphia.webhook import *
 
 __title__ = "polyscraper"
 __author__ = "8o5"
