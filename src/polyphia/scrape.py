@@ -35,6 +35,8 @@ def scrapeProducts(site): # make it vary depending on what site it is, idk if mu
 
             all_products = x.findAll("div", class_="grid-view-item product-card")
             all_products.extend(x.findAll("div", class_="grid-view-item grid-view-item--sold-out product-card"))
+            site_image = x.find('img', alt="Polyphia")
+            site_img_src = site_image["src"]
 
             products = {}
             for product_data in all_products:
@@ -52,10 +54,10 @@ def scrapeProducts(site): # make it vary depending on what site it is, idk if mu
                     {
                         "name": product_data.contents[9].contents[0],
                         "url": product_data.contents[1].attrs["href"],
-                        "img": f"https://{img_url[2:]}",
+                        "img": f"https:{img_url}",
                         "instock": instock,
                         "price": product_data.contents[11].contents[1].contents[3].contents[1].contents[0][:-1],
-                        "site_img": x.find("img", alt_=site)
+                        "site_img": f"https:{site_img_src}",
                     }
                 )
                 my_product = Product(data)

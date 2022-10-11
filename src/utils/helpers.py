@@ -17,10 +17,11 @@ class bcolors:
     UNDERLINE = "\033[4m"
     
 class placeholder:
-    img = "https://cdn.shopify.com/s/files/1/0271/6018/2883/files/POLYPHIA_OW-3_360x.png"
+    img = "https://preview.redd.it/h044s6irkmr81.png?width=640&crop=smart&auto=webp&s=ece91b4a64e212f3feba2f0afeeb67bebe41b89d"
     name = "Invalid URL in config.toml"
     price = "$0.00 USD"
     instock = "N/A"
+    site_img = "https://preview.redd.it/h044s6irkmr81.png?width=640&crop=smart&auto=webp&s=ece91b4a64e212f3feba2f0afeeb67bebe41b89d"
 
 
 class Product:
@@ -50,6 +51,10 @@ class Product:
     @property
     def updated(self) -> str:
         return self._data["updated"]
+    
+    @property
+    def site_img(self) -> str:
+        return self._data["site_img"]
 
 
 def colortime():
@@ -88,7 +93,7 @@ config = toml.load("src/config.toml")
 match config:
     case {
         "products": list(),
-        "settings": {"cooldown": int(), "webhooks": bool()},
+        "settings": {"cooldown": int(), "webhooks": bool(), "start_webhooks": bool()},
         "discord": {"webhook": str(), "my_id": int()},
     }:
         pass

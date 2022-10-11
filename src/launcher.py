@@ -46,25 +46,23 @@ def initialize(site):
         if products is None:
             raise Exception("Failed scraping products")
 
-        for i in range(lengths['polyphia']):
-            if i is None:
-                raise Exception("i is None") 
-            
-            for value in polyphia_query:
-                print(f"[{color(style='purple', text=site.upper(0))}] {color(style='green', text='SCANNING')} {products.get(value, placeholder).name}") 
+        for value in polyphia_query:
+            print(f"[{color(style='purple', text=site.capitalize())}] {color(style='green', text='SCANNING')} {products.get(value, placeholder).name}") 
 
             if config["settings"]["webhooks"] == True:
 
                 startScanning(
-                    product_image=products.get(i, placeholder).img, 
-                    product_title=products.get(i, placeholder).name, 
-                    link=i,
-                    price=products.get(i, placeholder).price, 
-                    status=products.get(i, placeholder).instock, 
-                    site=site.upper(0),
-                    site_img="site_img" # placeholder
+                    product_image=products.get(value, placeholder).img, 
+                    product_title=products.get(value, placeholder).name, 
+                    link=value,
+                    price=products.get(value, placeholder).price, 
+                    status=products.get(value, placeholder).instock, 
+                    site=site.capitalize(),
+                    site_img=products.get(value, placeholder).site_img, 
                 )
         
+        print()
+    
         
 
             

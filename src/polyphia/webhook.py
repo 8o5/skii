@@ -8,7 +8,7 @@ if config["settings"]["webhooks"] == True:
 
 def startScanning(product_image, product_title, link, price, status, site, site_img):
 
-    if config["settings"]["webhooks"] == True:
+    if config["settings"]["start_webhooks"] == True:
 
         embed = discord.Embed(
             title=f"🔎 STARTED SCANNING",
