@@ -1,10 +1,10 @@
-# polyscraper
-basic monitor for https://polyphia.com
+# skii
+basic monitor for https://polyphia.com, and more soon
 
 ## config.toml formatting rules
 (please read comments before opening issue)
 ### products
-* `products = ["url_1", "url_2"]` urls must start with `https://www.polyphia.com/products/`
+* `products = ["url_1", "url_2"]` urls must include `/products/name`
 * __variants will not work__ if the product link ends in `?variant=123456789` you must remove everything _after_ the `?`
 ### settings
 * `cooldown=number` cooldown is in seconds, __going below `60` when monitoring for long periods of time is not recommended__ to prevent getting temporarily banned from the website
