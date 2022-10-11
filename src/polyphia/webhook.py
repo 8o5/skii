@@ -1,12 +1,12 @@
 import discord
 
-from .helpers import color, config
+from utils.helpers import color, config
 
 if config["settings"]["webhooks"] == True:
     webhook = discord.SyncWebhook.from_url(config["discord"]["webhook"])
 
 
-def startScanning(product_image, product_title, link, price, status):
+def startScanning(product_image, product_title, link, price, status, site, site_img):
 
     if config["settings"]["webhooks"] == True:
 
@@ -18,9 +18,9 @@ def startScanning(product_image, product_title, link, price, status):
         )
 
         embed.set_author(
-            name="Polyphia",
-            url="https://www.polyphia.com/",
-            icon_url="https://cdn.shopify.com/s/files/1/0271/6018/2883/files/POLYPHIA_OW-3_180x.png?v=1657731615",
+            name=site.upper(),
+            url=f"https://www.{site}.com/",
+            icon_url=site_img,
         )  # set author
 
         embed.set_image(url="")  # set image

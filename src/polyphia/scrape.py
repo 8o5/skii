@@ -1,4 +1,3 @@
-import enum
 import sys
 from typing import List, Tuple
 
@@ -6,12 +5,12 @@ import requests
 from bs4 import BeautifulSoup
 import time
 
-from polyscraper.__init__ import __collections__
-from polyscraper.helpers import Product, config, headers
-from polyscraper.webhook import dataError, newCollection
+from polyphia.__init__ import __polyphiacollections__
+from utils.helpers import Product, config, headers
+from polyphia.webhook import dataError, newCollection
 
 
-def scrapeProducts():
+def scrapeProducts(): # make it vary depending on what site it is, idk if multiple if statements is good or not here
 
     data = requests.get(
         url="https://www.polyphia.com/collections/all",
@@ -55,7 +54,8 @@ def scrapeProducts():
                     "url": product_data.contents[1].attrs["href"],
                     "img": f"https://{img_url[2:]}",
                     "instock": instock,
-                    "price": product_data.contents[11].contents[1].contents[3].contents[1].contents[0][:-1]
+                    "price": product_data.contents[11].contents[1].contents[3].contents[1].contents[0][:-1],
+                    "site_img": x.find("img", alt_=site)
                 }
             )
             my_product = Product(data)
@@ -92,12 +92,10 @@ def scrapeCollections(list_collections, all_list_collections):
 
             all_list_collections.append(str.strip(collection.text))
 
-            if str.strip(collection.text) not in __collections__:
+            if str.strip(collection.text) not in __polyphiacollections__:
 
                 name = str.strip(collection.text)
                 url_loc = collection.parent.parent
-                print("here") # debug
-                time.sleep(3)
 
                 if url_loc["href"] != "#":
                     newCollection(name=name, url=f"https://www.polyphia.com{url_loc['href']}")

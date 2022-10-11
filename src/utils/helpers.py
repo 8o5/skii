@@ -54,7 +54,7 @@ class Product:
 
 def colortime():
     time.ctime()
-    return f"{bcolors.HEADER}[{time.ctime()}] {bcolors.ENDC}"
+    return f"{bcolors.OKBLUE}[{time.ctime()}] {bcolors.ENDC}"
 
 
 def color(style, text):
@@ -65,6 +65,7 @@ def color(style, text):
         "cyan": f"{bcolors.OKCYAN}{text}{bcolors.ENDC}",
         "green": f"{bcolors.OKGREEN}{text}{bcolors.ENDC}",
         "warning": f"{bcolors.WARNING}{text}{bcolors.ENDC}",
+        "purple": f"{bcolors.HEADER}{text}{bcolors.ENDC}",
     }
 
     try:
@@ -95,3 +96,18 @@ match config:
         raise ValueError(f"invalid configuration: {config}")
 
 mention = config["discord"]["my_id"]
+
+def findSites():
+
+    sites = {}
+
+    for i in config['products']:
+
+        site = i.split("www.")[1]
+        site = site.split(".com")[0]
+        
+        sites.update({
+            config['products'][i]: site
+        })
+
+    return sites
