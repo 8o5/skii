@@ -99,15 +99,17 @@ mention = config["discord"]["my_id"]
 
 def findSites():
 
-    sites = {}
+    polyphia = []
+    babymetal = []
 
     for i in config['products']:
 
         site = i.split("www.")[1]
         site = site.split(".com")[0]
-        
-        sites.update({
-            config['products'][i]: site
-        })
 
-    return sites
+        if site == "polyphia":
+            polyphia.append(i)
+        elif site == "babymetalstore":
+            babymetal.append(i)
+
+    return len(polyphia), len(babymetal), polyphia, babymetal

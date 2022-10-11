@@ -1,6 +1,6 @@
 import time
 
-from polyphia.__init__ import __version__
+from polyphia.__init__ import __version__, __sites__
 from utils.helpers import cls, color, colortime, config, placeholder, findSites
 from polyphia.scrape import scrapeCollections, scrapeProducts
 from polyphia.webhook import notify, startScanning
@@ -18,57 +18,73 @@ for key, value in config['settings'].items():
 
 print()
 
+info = findSites()
 
-sites = findSites() # make it import the needed modules depending on what sites there are in the set
+poly = info[0]
+babymetal = info[1]
+polyphia_query = info[2]
+babymetal_query = info[3]
 
-def startup(site):
+lengths = (
+    {
+    "polyphia": poly,
+    "babymetal": babymetal,
+        }
+    )
 
-    collections = scrapeCollections(list_collections=[], all_list_collections=[]) # collections and products only need to be scraped once per site
+def initialize(site):
 
-    if collections is None:
-        raise Exception("Failed scraping collections")
+    if site == __sites__[0]:
 
-    products = scrapeProducts(site=site)
+        collections = scrapeCollections(list_collections=[], all_list_collections=[]) # collections and products only need to be scraped once per site
 
-    if products is None:
-        raise Exception("Failed scraping products")
-       
+        if collections is None:
+            raise Exception("Failed scraping collections")
 
-    for i in config['products']: # make this loop for all keys that match "site" 
+        products = scrapeProducts(site=site)
 
-        if i is None:
-            raise Exception("i is None")
+        if products is None:
+            raise Exception("Failed scraping products")
 
-        print(f"[{color(style='purple', text=site.upper(0))}] {color(style='green', text='SCANNING')} {products.get(i, placeholder).name}") 
+        for i in range(lengths['polyphia']):
+            if i is None:
+                raise Exception("i is None") 
+            
+            for value in polyphia_query:
+                print(f"[{color(style='purple', text=site.upper(0))}] {color(style='green', text='SCANNING')} {products.get(value, placeholder).name}") 
 
-        if config["settings"]["webhooks"] == True:
+            if config["settings"]["webhooks"] == True:
 
-            startScanning(
-                product_image=products.get(i, placeholder).img, 
-                product_title=products.get(i, placeholder).name, 
-                link=i,
-                price=products.get(i, placeholder).price, 
-                status=products.get(i, placeholder).instock, 
-                site=site.upper(0),
-                site_img="site_img" # placeholder
-            )
+                startScanning(
+                    product_image=products.get(i, placeholder).img, 
+                    product_title=products.get(i, placeholder).name, 
+                    link=i,
+                    price=products.get(i, placeholder).price, 
+                    status=products.get(i, placeholder).instock, 
+                    site=site.upper(0),
+                    site_img="site_img" # placeholder
+                )
+        
+        
 
-    print()
+            
 
-for i in sites:
+    elif site == "babymetal":
+        products = None
+        raise Exception(f"failed to initialize {site}")
+    
+    else:
+        products = None
+        raise Exception(f"failed to initialize {site}")
 
-    if i is None:
-            raise Exception("i is None")
+    return products
 
-    startup(site=i) # loop once for each seperate key in sites dict, ie: polyphia, babymetal
-
+if lengths["polyphia"] > 0:
+    products = initialize(site="polyphia")
+else:
+    raise Exception
 
 while True:
-
-    products = scrapeProducts(site="") # match line 37 ig
-    
-    if products is None:
-        raise Exception("Failed scraping products")
     
     print(colortime())
 
