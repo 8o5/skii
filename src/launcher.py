@@ -1,15 +1,20 @@
-import sys
 import time
 
-
-from polyscraper.helpers import cls, colortime, color, config, placeholder
+from polyscraper.__init__ import __version__
+from polyscraper.helpers import cls, color, colortime, config, placeholder
 from polyscraper.scrape import scrapeCollections, scrapeProducts
-from polyscraper.webhook import startScanning, notify
+from polyscraper.webhook import notify, startScanning
 
 
 def startup():
     cls()
-    print(f"{color(style='blue', text='STARTED WITH SETTINGS:')} {config['settings']}")
+    print(" ██▓███   ▒█████   ██▓   ▓██   ██▓  ██████  ▄████▄   ██▀███   ▄▄▄       ██▓███  ▓█████  ██▀███  \n▓██░  ██▒▒██▒  ██▒▓██▒    ▒██  ██▒▒██    ▒ ▒██▀ ▀█  ▓██ ▒ ██▒▒████▄    ▓██░  ██▒▓█   ▀ ▓██ ▒ ██▒\n▓██░ ██▓▒▒██░  ██▒▒██░     ▒██ ██░░ ▓██▄   ▒▓█    ▄ ▓██ ░▄█ ▒▒██  ▀█▄  ▓██░ ██▓▒▒███   ▓██ ░▄█ ▒\n▒██▄█▓▒ ▒▒██   ██░▒██░     ░ ▐██▓░  ▒   ██▒▒▓▓▄ ▄██▒▒██▀▀█▄  ░██▄▄▄▄██ ▒██▄█▓▒ ▒▒▓█  ▄ ▒██▀▀█▄  \n▒██▒ ░  ░░ ████▓▒░░██████▒ ░ ██▒▓░▒██████▒▒▒ ▓███▀ ░░██▓ ▒██▒ ▓█   ▓██▒▒██▒ ░  ░░▒████▒░██▓ ▒██▒\n▒▓▒░ ░  ░░ ▒░▒░▒░ ░ ▒░▓  ░  ██▒▒▒ ▒ ▒▓▒ ▒ ░░ ░▒ ▒  ░░ ▒▓ ░▒▓░ ▒▒   ▓▒█░▒▓▒░ ░  ░░░ ▒░ ░░ ▒▓ ░▒▓░\n░▒ ░       ░ ▒ ▒░ ░ ░ ▒  ░▓██ ░▒░ ░ ░▒  ░ ░  ░  ▒     ░▒ ░ ▒░  ▒   ▒▒ ░░▒ ░      ░ ░  ░  ░▒ ░ ▒░\n░░       ░ ░ ░ ▒    ░ ░   ▒ ▒ ░░  ░  ░  ░  ░          ░░   ░   ░   ▒   ░░          ░     ░░   ░ \n             ░ ░      ░  ░░ ░           ░  ░ ░         ░           ░  ░            ░  ░   ░     \n                          ░ ░              ░                                                    ")
+    print(color(style="cyan", text=__version__))
+
+    print(f"{color(style='blue', text='STARTED WITH SETTINGS:')}")
+    for key, value in config['settings'].items():
+        print(key, ':', value)
+    
     print("---")
 
     collections = scrapeCollections(list_collections=[], all_list_collections=[])

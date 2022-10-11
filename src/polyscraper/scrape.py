@@ -1,11 +1,14 @@
+import enum
 import sys
 from typing import List, Tuple
 
 import requests
 from bs4 import BeautifulSoup
+import time
 
-from .helpers import Product, config, headers
-from .webhook import dataError
+from polyscraper.__init__ import __collections__
+from polyscraper.helpers import Product, config, headers
+from polyscraper.webhook import dataError, newCollection
 
 
 def scrapeProducts():
@@ -88,6 +91,19 @@ def scrapeCollections(list_collections, all_list_collections):
         for collection in all_collections:
 
             all_list_collections.append(str.strip(collection.text))
+
+            if str.strip(collection.text) not in __collections__:
+
+                name = str.strip(collection.text)
+                url_loc = collection.parent.parent
+                print("here") # debug
+                time.sleep(3)
+
+                if url_loc["href"] != "#":
+                    newCollection(name=name, url=f"https://www.polyphia.com{url_loc['href']}")
+
+                elif url_loc["href"] == "#":
+                    newCollection(name=name, url=None)
 
         for collection in filtered_collections:
 
