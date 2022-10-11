@@ -1,4 +1,4 @@
-# ⛷
+# ⛷ skii
 basic monitor for https://polyphia.com, and more soon
 
 ## 📖 config.toml formatting rules 
