@@ -19,22 +19,22 @@ for key, value in config['settings'].items():
 print()
 
 
-findSites() # make it import the needed modules depending on what sites there are in the set
+sites = findSites() # make it import the needed modules depending on what sites there are in the set
 
 def startup(site):
 
-    collections = scrapeCollections(list_collections=[], all_list_collections=[])
+    collections = scrapeCollections(list_collections=[], all_list_collections=[]) # collections and products only need to be scraped once per site
 
     if collections is None:
         raise Exception("Failed scraping collections")
 
-    products = scrapeProducts()
+    products = scrapeProducts(site=site)
 
     if products is None:
         raise Exception("Failed scraping products")
        
 
-    for i in config['products']:
+    for i in config['products']: # make this loop for all keys that match "site" 
 
         if i is None:
             raise Exception("i is None")
@@ -50,25 +50,29 @@ def startup(site):
                 price=products.get(i, placeholder).price, 
                 status=products.get(i, placeholder).instock, 
                 site=site.upper(0),
-                site_img=site_img
+                site_img="site_img" # placeholder
             )
 
     print()
 
+for i in sites:
 
-startup()
+    if i is None:
+            raise Exception("i is None")
+
+    startup(site=i) # loop once for each seperate key in sites dict, ie: polyphia, babymetal
 
 
 while True:
 
-    products = scrapeProducts()
+    products = scrapeProducts(site="") # match line 37 ig
     
     if products is None:
         raise Exception("Failed scraping products")
     
     print(colortime())
 
-    for i in config['products']:
+    for i in config['products']: # this needs to sync with startup
 
         if products.get(i, placeholder).instock == "IN STOCK": 
             notify(products=products, current=i)

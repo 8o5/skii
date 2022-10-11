@@ -5,63 +5,63 @@ import requests
 from bs4 import BeautifulSoup
 import time
 
-from polyphia.__init__ import __polyphiacollections__
+from polyphia.__init__ import __polyphiacollections__, __sites__
 from utils.helpers import Product, config, headers
 from polyphia.webhook import dataError, newCollection
 
 
-def scrapeProducts(): # make it vary depending on what site it is, idk if multiple if statements is good or not here
+def scrapeProducts(site): # make it vary depending on what site it is, idk if multiple if statements is good or not here
+    if site == __sites__[0]: # polyphia
+        data = requests.get(
+            url="https://www.polyphia.com/collections/all",
+            headers=headers,
+            timeout=5,
+        )
 
-    data = requests.get(
-        url="https://www.polyphia.com/collections/all",
-        headers=headers,
-        timeout=5,
-    )
+        data.raise_for_status()
 
-    data.raise_for_status()
+        if data.status_code != 200:  # site response error handling
 
-    if data.status_code != 200:  # site response error handling
+            if config["settings"]["webhooks"] == True:
+                dataError(data=data.url)
 
-        if config["settings"]["webhooks"] == True:
-            dataError(data=data.url)
+            sys.exit(data.status_code)
 
-        sys.exit(data.status_code)
+        elif data.status_code == 200:
 
-    elif data.status_code == 200:
+            all_products = []
 
-        all_products = []
+            x = BeautifulSoup(data.content, "html.parser")
 
-        x = BeautifulSoup(data.content, "html.parser")
+            all_products = x.findAll("div", class_="grid-view-item product-card")
+            all_products.extend(x.findAll("div", class_="grid-view-item grid-view-item--sold-out product-card"))
 
-        all_products = x.findAll("div", class_="grid-view-item product-card")
-        all_products.extend(x.findAll("div", class_="grid-view-item grid-view-item--sold-out product-card"))
+            products = {}
+            for product_data in all_products:
+                data = {}
 
-        products = {}
-        for product_data in all_products:
-            data = {}
+                img_location = product_data.contents[5].contents[1].contents[1].contents[1].attrs["data-src"]
+                img_url = img_location.replace("{width}", "540")
 
-            img_location = product_data.contents[5].contents[1].contents[1].contents[1].attrs["data-src"]
-            img_url = img_location.replace("{width}", "540")
+                if product_data.contents[11].contents[7].contents[3].contents[1].contents[0] == "Sold out":
+                    instock = "OOS"
+                else:
+                    instock = "IN STOCK"
 
-            if product_data.contents[11].contents[7].contents[3].contents[1].contents[0] == "Sold out":
-                instock = "OOS"
-            else:
-                instock = "IN STOCK"
+                data.update(
+                    {
+                        "name": product_data.contents[9].contents[0],
+                        "url": product_data.contents[1].attrs["href"],
+                        "img": f"https://{img_url[2:]}",
+                        "instock": instock,
+                        "price": product_data.contents[11].contents[1].contents[3].contents[1].contents[0][:-1],
+                        "site_img": x.find("img", alt_=site)
+                    }
+                )
+                my_product = Product(data)
+                products.update({f"https://www.polyphia.com{product_data.contents[1].attrs['href']}": my_product})
 
-            data.update(
-                {
-                    "name": product_data.contents[9].contents[0],
-                    "url": product_data.contents[1].attrs["href"],
-                    "img": f"https://{img_url[2:]}",
-                    "instock": instock,
-                    "price": product_data.contents[11].contents[1].contents[3].contents[1].contents[0][:-1],
-                    "site_img": x.find("img", alt_=site)
-                }
-            )
-            my_product = Product(data)
-            products.update({f"https://www.polyphia.com{product_data.contents[1].attrs['href']}": my_product})
-
-        return products
+            return products
 
 
 def scrapeCollections(list_collections, all_list_collections):
