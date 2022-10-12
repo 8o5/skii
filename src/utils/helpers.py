@@ -110,12 +110,10 @@ def findSites():
 
     for i in config['products']:
 
-        site = i.split("www.")[1]
-        site = site.split(".com")[0]
-
-        if site == "polyphia":
+        if i.find('polyphia') != -1:
             polyphia.append(i)
-        elif site == "babymetalstore":
+
+        elif i.find('babymetalstore') != -1:
             babymetal.append(i)
 
     return len(polyphia), len(babymetal), polyphia, babymetal

@@ -1,5 +1,6 @@
 import discord
 from utils.helpers import color, config
+from utils.__init__ import __sites__
 
 if config["settings"]["webhooks"] == True:
     webhook = discord.SyncWebhook.from_url(config["discord"]["webhook"])
@@ -87,47 +88,89 @@ def notify(products, current):
 
             exit()
 
-def newCollection(name, url):
+def newCollection(name, url, site):
 
-    if config["settings"]["webhooks"] == True:
+    if site == __sites__[0]:
 
-        embed = discord.Embed(
-            title=f"NEW COLLECTION",
-            color=0xCFC00,
-            timestamp=discord.utils.utcnow(),
-            description=name,
-        )
+        if config["settings"]["webhooks"] == True:
 
-        embed.set_author(
-            name=f"Polyphia",
-            url="https://www.polyphia.com/",
-            icon_url="https://cdn.shopify.com/s/files/1/0271/6018/2883/files/POLYPHIA_OW-3_180x.png?v=1657731615",
-        )  # set author
-
-        embed.set_image(url="")  # set image
-
-        embed.set_thumbnail(url="")  # set thumbnail
-
-        embed.set_footer(
-            text="nic#0002",
-            icon_url="https://cdn.discordapp.com/avatars/249547320306171907/d0f228743a5d8164043d75834abb755c.png",
-        )  # set footer
-
-        embed.add_field(name="URL", value=f"https://www.polyphia.com/{url}", inline=False)
-
-        try:
-
-            webhook.send(content=f"<@{config['discord']['my_id']}>", embed=embed)
-
-        except Exception as exception:
-
-            print(
-                f"{color(style='fail', text='WEBHOOK ERROR: ')} {exception.args[0].args[1].args[1]}"
+            embed = discord.Embed(
+                title=f"NEW COLLECTION",
+                color=0xCFC00,
+                timestamp=discord.utils.utcnow(),
+                description=name,
             )
 
-            exit()
-    
-    print(f"NEW COLLECTION FOUND: {name} -- {url}")
+            embed.set_author(
+                name=f"Polyphia",
+                url="https://www.polyphia.com/",
+                icon_url="https://cdn.shopify.com/s/files/1/0271/6018/2883/files/POLYPHIA_OW-3_180x.png?v=1657731615",
+            )  # set author
+
+            embed.set_image(url="")  # set image
+
+            embed.set_thumbnail(url="")  # set thumbnail
+
+            embed.set_footer(
+                text="nic#0002",
+                icon_url="https://cdn.discordapp.com/avatars/249547320306171907/d0f228743a5d8164043d75834abb755c.png",
+            )  # set footer
+
+            embed.add_field(name="URL", value=f"https://www.polyphia.com/{url}", inline=False)
+
+            try:
+
+                webhook.send(content=f"<@{config['discord']['my_id']}>", embed=embed)
+
+            except Exception as exception:
+
+                print(
+                    f"{color(style='fail', text='WEBHOOK ERROR: ')} {exception.args[0].args[1].args[1]}"
+                )
+
+                exit()
+        
+    elif site == __sites__[1]: #babymetal
+
+        if config["settings"]["webhooks"] == True:
+
+            embed = discord.Embed(
+                title=f"NEW COLLECTION",
+                color=0xCFC00,
+                timestamp=discord.utils.utcnow(),
+                description=name,
+            )
+
+            embed.set_author(
+                name=f"BABYMETAL",
+                url="https://babymetalstore.com/",
+                icon_url="https://cdn.shopify.com/s/files/1/2212/1957/files/Baby_Metal_logo_280x@2x.png?v=1613671501",
+            )  # set author
+
+            embed.set_image(url="")  # set image
+
+            embed.set_thumbnail(url="")  # set thumbnail
+
+            embed.set_footer(
+                text="nic#0002",
+                icon_url="https://cdn.discordapp.com/avatars/249547320306171907/d0f228743a5d8164043d75834abb755c.png",
+            )  # set footer
+
+            embed.add_field(name="URL", value=f"https://babymetalstore.com/collections{url}", inline=False)
+
+            try:
+
+                webhook.send(content=f"<@{config['discord']['my_id']}>", embed=embed)
+
+            except Exception as exception:
+
+                print(
+                    f"{color(style='fail', text='WEBHOOK ERROR: ')} {exception.args[0].args[1].args[1]}"
+                )
+
+                exit()
+
+        print(f"NEW COLLECTION FOUND: {name} -- {url}")
 
 
 # @nic I removed type from here because I only seeing you use it once, either come up with a better way of doing this or actually add the type everywhere
