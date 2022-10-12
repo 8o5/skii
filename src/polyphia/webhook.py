@@ -1,5 +1,4 @@
 import discord
-
 from utils.helpers import color, config
 
 if config["settings"]["webhooks"] == True:

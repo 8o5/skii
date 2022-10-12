@@ -1,12 +1,10 @@
 import sys
-from typing import List, Tuple
 
 import requests
 from bs4 import BeautifulSoup
-import time
-
 from utils.__init__ import __polyphiacollections__, __sites__
 from utils.helpers import Product, config, headers
+
 from polyphia.webhook import dataError, newCollection
 
 

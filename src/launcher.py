@@ -1,10 +1,9 @@
 import time
 
-from utils.__init__ import __version__, __sites__
-from utils.helpers import cls, color, colortime, config, placeholder, findSites
 from polyphia.scrape import scrapeCollections, scrapeProducts
 from polyphia.webhook import notify, startScanning
-
+from utils.__init__ import __sites__, __version__
+from utils.helpers import cls, color, colortime, config, findSites, placeholder
 
 cls()
 print("  ██████  ██ ▄█▀ ██▓ ██▓\n▒██    ▒  ██▄█▒ ▓██▒▓██▒\n░ ▓██▄   ▓███▄░ ▒██▒▒██▒\n  ▒   ██▒▓██ █▄ ░██░░██░\n▒██████▒▒▒██▒ █▄░██░░██░\n▒ ▒▓▒ ▒ ░▒ ▒▒ ▓▒░▓  ░▓  \n░ ░▒  ░ ░░ ░▒ ▒░ ▒ ░ ▒ ░\n░  ░  ░  ░ ░░ ░  ▒ ░ ▒ ░\n      ░  ░  ░    ░   ░  ")
@@ -38,20 +37,20 @@ def initialize(site):
 
     for i in site:
 
-        if site[i] == __sites__[0]: # polyphia
+        if i == __sites__[0]: # polyphia
 
             collections = scrapeCollections(list_collections=[], all_list_collections=[]) # collections and products only need to be scraped once per site
 
             if collections is None:
                 raise Exception("Failed scraping collections")
 
-            products = scrapeProducts(site=site)
+            products = scrapeProducts(site=i)
 
             if products is None:
                 raise Exception("Failed scraping products")
 
             for value in polyphia_query:
-                print(f"[{color(style='purple', text=site.capitalize())}] {color(style='green', text='SCANNING')} {products.get(value, placeholder).name}") 
+                print(f"[{color(style='purple', text=i.capitalize())}] {color(style='green', text='SCANNING')} {products.get(value, placeholder).name}") 
 
                 if config["settings"]["webhooks"] == True:
 
@@ -61,7 +60,7 @@ def initialize(site):
                         link=value,
                         price=products.get(value, placeholder).price, 
                         status=products.get(value, placeholder).instock, 
-                        site=site.capitalize(),
+                        site=i.capitalize(),
                         site_img=products.get(value, placeholder).site_img, 
                     )
             

@@ -6,9 +6,10 @@ No description, website, or topics provided.
 :license: MIT, see LICENSE for more details.
 """
 
-from utils.helpers import *
 from polyphia.scrape import *
 from polyphia.webhook import *
+
+from utils.helpers import *
 
 __title__ = "polyscraper"
 __author__ = "8o5"
