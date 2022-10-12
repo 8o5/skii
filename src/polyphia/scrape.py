@@ -1,4 +1,6 @@
 import sys
+import time
+from typing_extensions import reveal_type
 
 import requests
 from bs4 import BeautifulSoup
@@ -64,48 +66,97 @@ def scrapeProducts(site): # make it vary depending on what site it is, idk if mu
             return products
 
 
-def scrapeCollections(list_collections, all_list_collections):
+def scrapeCollections(site, list_collections, all_list_collections):
+    if site == __sites__[0]: # polyphia
+        data = requests.get(
+            url="https://www.polyphia.com/collections/",
+            headers=headers,
+            timeout=5,
+        )
 
-    data = requests.get(
-        url="https://www.polyphia.com/collections/",
-        headers=headers,
-        timeout=5,
-    )
+        data.raise_for_status()
 
-    data.raise_for_status()
+        if data.status_code != 200:  # site response error handling
 
-    if data.status_code != 200:  # site response error handling
+            if config["settings"]["webhooks"] == True:
+                dataError(data=data.url)
 
-        if config["settings"]["webhooks"] == True:
-            dataError(data=data.url)
+            sys.exit(data.status_code)
 
-        sys.exit(data.status_code)
+        elif data.status_code == 200:
+            x = BeautifulSoup(data.content, "html.parser")
 
-    elif data.status_code == 200:
-        x = BeautifulSoup(data.content, "html.parser")
+            all_collections = x.findAll("div", class_="collection-grid-item__title h3")
 
-        all_collections = x.findAll("div", class_="collection-grid-item__title h3")
+            filtered_collections = x.findAll("a", class_="collection-grid-item__link")
 
-        filtered_collections = x.findAll("a", class_="collection-grid-item__link")
+            for collection in all_collections:
 
-        for collection in all_collections:
+                all_list_collections.append(str.strip(collection.text))
 
-            all_list_collections.append(str.strip(collection.text))
+                if str.strip(collection.text) not in __polyphiacollections__:
 
-            if str.strip(collection.text) not in __polyphiacollections__:
+                    name = str.strip(collection.text)
+                    url_loc = collection.parent.parent
 
-                name = str.strip(collection.text)
-                url_loc = collection.parent.parent
+                    if url_loc["href"] != "#":
+                        newCollection(name=name, url=f"https://www.polyphia.com{url_loc['href']}")
 
-                if url_loc["href"] != "#":
-                    newCollection(name=name, url=f"https://www.polyphia.com{url_loc['href']}")
+                    elif url_loc["href"] == "#":
+                        newCollection(name=name, url=None)
 
-                elif url_loc["href"] == "#":
-                    newCollection(name=name, url=None)
+            for collection in filtered_collections:
 
-        for collection in filtered_collections:
+                if collection["href"] != "#":
+                    list_collections.append(collection["href"].split("/")[2])
 
-            if collection["href"] != "#":
-                list_collections.append(collection["href"].split("/")[2])
+            return (list(list_collections), list(all_list_collections))
 
-        return (list(list_collections), list(all_list_collections))
+    elif site == __sites__[1]: # babymetal
+        data = requests.get(
+            url="https://babymetalstore.com/collections/",
+            headers=headers,
+            timeout=5,
+        )
+
+        data.raise_for_status()
+
+        if data.status_code != 200:  # site response error handling
+
+            if config["settings"]["webhooks"] == True:
+                dataError(data=data.url)
+
+            sys.exit(data.status_code)
+
+        elif data.status_code == 200:
+            x = BeautifulSoup(data.content, "html.parser")
+
+            all_collections = x.findAll("div", class_="one-third column thumbnail even")
+            all_collections.extend("div", class_="one-third column thumbnail odd")
+
+            filtered_collections = x.findAll("a", class_="collection-grid-item__link")
+
+            print("here") # debug
+            time.sleep(3)
+
+            for collection in all_collections:
+
+                all_list_collections.append(str.strip(collection.text))
+
+                if str.strip(collection.text) not in __polyphiacollections__:
+
+                    name = str.strip(collection.text)
+                    url_loc = collection.parent.parent
+
+                    if url_loc["href"] != "#":
+                        newCollection(name=name, url=f"https://www.polyphia.com{url_loc['href']}")
+
+                    elif url_loc["href"] == "#":
+                        newCollection(name=name, url=None)
+
+            for collection in filtered_collections:
+
+                if collection["href"] != "#":
+                    list_collections.append(collection["href"].split("/")[2])
+
+            return (list(list_collections), list(all_list_collections))

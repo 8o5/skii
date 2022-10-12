@@ -89,6 +89,7 @@ def cls():
 
 
 config = toml.load("src/config.toml")
+# config = toml.load("config.toml")
 
 match config:
     case {
