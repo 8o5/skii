@@ -1,5 +1,6 @@
 venv
 src/config.toml
+src/__pycache__
 src/polyphia/__pycache__
 src/utils/__pycache__
 .vscode

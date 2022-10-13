@@ -1,17 +1,17 @@
 """
-polyscraper
+skii
 ~~~~~~~~~~~~~~~~~~~
 No description, website, or topics provided. 
 :copyright: (c) 2022-present 8o5
 :license: MIT, see LICENSE for more details.
 """
 
-from polyphia.scrape import *
-from polyphia.webhook import *
-
 from utils.helpers import *
+from utils.scrape import *
 
-__title__ = "polyscraper"
+
+
+__title__ = "skii"
 __author__ = "8o5"
 __authors__ = ["8o5", "curiositIy"]
 __license__ = "MIT"

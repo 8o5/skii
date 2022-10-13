@@ -1,26 +1,27 @@
 import time
 
-from polyphia.scrape import scrapeCollections, scrapeProducts
-from polyphia.webhook import notify, startScanning
 from utils.__init__ import __sites__, __version__
+from polyphia.webhook import notify, startScanning
 from utils.helpers import cls, color, colortime, config, findSites, placeholder
+from utils.scrape import scrapeData
 
 sites = set()
 
 def clear():
     cls()
     print("  ██████  ██ ▄█▀ ██▓ ██▓\n▒██    ▒  ██▄█▒ ▓██▒▓██▒\n░ ▓██▄   ▓███▄░ ▒██▒▒██▒\n  ▒   ██▒▓██ █▄ ░██░░██░\n▒██████▒▒▒██▒ █▄░██░░██░\n▒ ▒▓▒ ▒ ░▒ ▒▒ ▓▒░▓  ░▓  \n░ ░▒  ░ ░░ ░▒ ▒░ ▒ ░ ▒ ░\n░  ░  ░  ░ ░░ ░  ▒ ░ ▒ ░\n      ░  ░  ░    ░   ░  ")
-    print(color(style="cyan", text=f"\n{__version__}"))
+    print(color(style="cyan", text=f"\n{__version__}\n"))
 
 clear()
 
-option = input(f"[{color(style='purple', text='1')}] Start Monitoring\n[{color(style='purple', text='2')}] Credits\n\n")
+# [{color(style='purple', text='#')}] TEXT\n
+option = input(f"[{color(style='purple', text='1')}] Start Monitoring Products\n[{color(style='purple', text='2')}] Start Monitoring Collections\n[{color(style='purple', text='3')}] Credits\n\n")
 
 clear()
 
 if option == "1":
 
-    print(f"\n{color(style='blue', text='STARTED WITH SETTINGS:')}")
+    print(f"{color(style='blue', text='STARTED MONITORING PRODUCTS WITH SETTINGS:')}")
     for key, value in config['settings'].items():
         print(key, ':', value)
 
@@ -43,7 +44,8 @@ if option == "1":
     def initialize(sites):
 
         products = []
-        all_products = []
+        polyphia_products = None
+        babymetal_products = None
         all_collections = []
 
         for i in sites:
@@ -52,24 +54,27 @@ if option == "1":
 
             if i == __sites__[0]: # polyphia
 
-                collections = (scrapeCollections(site=i, list_collections=[], all_list_collections=[])) # collections and products only need to be scraped once per site
+                collections = scrapeData(site=i, mode="collections")
 
-                if collections == []:
+                if collections == None:
                     raise Exception("Failed scraping collections")
 
-                all_collections.append(collections)
+                all_collections.append(collections[0])
 
-                products = scrapeProducts(site=i)
+                products = scrapeData(site=i, mode="products")
 
                 if products is None:
                     raise Exception("Failed scraping products")
 
-                all_products.append(products)
+                polyphia_products = products
+
+                print("here") # debug
+                time.sleep(3)
 
 
                 for value in polyphia_query:
 
-                    print(f"[{color(style='purple', text=i.capitalize())}] {color(style='green', text='SCANNING')} {products.get(value, placeholder).name}") 
+                    print(f"[{color(style='purple', text=i.upper())}] {color(style='green', text='SCANNING')} {products.get(value, placeholder).name}") 
 
                     if config["settings"]["webhooks"] == True:
 
@@ -87,26 +92,24 @@ if option == "1":
 
             elif i == __sites__[1]: # babymetal
 
-                collections = (scrapeCollections(site=i, list_collections=[], all_list_collections=[])) # collections and products only need to be scraped once per site
+                collections = scrapeData(site=i, mode="collections")
 
                 if collections == []:
                     raise Exception("Failed scraping collections")
 
                 all_collections.append(collections)
 
-                products = scrapeProducts(site=i)
+                products = scrapeData(site=i, mode="products")
 
                 if products is None:
                     raise Exception("Failed scraping products")
 
-                all_products.append(products)
+                babymetal_products = products
 
                 for value in babymetal_query:
 
-                    print(f"[{color(style='purple', text=i.capitalize())}] {color(style='green', text='SCANNING')} {products.get(value, placeholder).name}") 
+                    print(f"[{color(style='purple', text=i.upper())}] {color(style='green', text='SCANNING')} {products.get(value, placeholder).name}") 
 
-                    print("here")
-                    time.sleep(3)
 
                     if config["settings"]["webhooks"] == True:
 
@@ -122,10 +125,18 @@ if option == "1":
                 
             
             else:
-                products = None
+                polyphia_products = None
+                babymetal_products = None
                 raise Exception(f"failed to initialize {i} from {sites}")
 
-        return all_products
+        if polyphia_products != None and babymetal_products != None:
+            return polyphia_products, babymetal_products
+
+        elif polyphia_products == None and babymetal_products != None:
+            return None, babymetal_products
+
+        elif polyphia_products != None and babymetal_products == None:
+            return polyphia_products, None
 
     try:
         if lengths["polyphia"] > 0:
@@ -137,8 +148,7 @@ if option == "1":
     except:
         raise Exception(f"{lengths} are not bigger than 0")
 
-    init = initialize(sites=sites)
-    
+    init = initialize(sites=sites) # sort this
 
     if init == None:
         raise Exception(f"init == {init}")
@@ -153,31 +163,41 @@ if option == "1":
 
             for value in polyphia_query:
                 products = init[0]
+                if products == None:
+                    raise Exception(f"products == {products}")
                 if products.get(value, placeholder).instock == "IN STOCK": 
                     notify(products=products, current=value)
-                    print(f"[{color(style='purple', text='Polyphia')}] [{color(style='green', text='IN STOCK')}] {products.get(value, placeholder).name}") 
+                    print(f"[{color(style='purple', text='POLYPHIA')}] [{color(style='green', text='IN STOCK')}] {products.get(value, placeholder).name}") 
 
                 elif products.get(value, placeholder).instock == "OOS":
-                    print(f"[{color(style='purple', text='Polyphia')}] [{color(style='fail', text='OUT OF STOCK')}] {products.get(value, placeholder).name}") 
+                    print(f"[{color(style='purple', text='POLYPHIA')}] [{color(style='fail', text='OUT OF STOCK')}] {products.get(value, placeholder).name}") 
 
         
         if lengths["babymetal"] > 0:
             
             for value in babymetal_query:
                 products = init[1]
+                if products == None:
+                    raise Exception(f"products == {products}")
                 if products.get(value, placeholder).instock == "IN STOCK": 
                     # notify(products=products, current=value)
-                    print(f"[{color(style='purple', text='BABYMETAL')}] [{color(style='green', text='IN STOCK')}] {products.get(value, placeholder).name}") 
+                    print(f"[{color(style='purple', text='BABYMETALSTORE')}] [{color(style='green', text='IN STOCK')}] {products.get(value, placeholder).name}") 
 
                 elif products.get(value, placeholder).instock == "OOS":
-                    print(f"[{color(style='purple', text='BABYMETAL')}] [{color(style='fail', text='OUT OF STOCK')}] {products.get(value, placeholder).name}") 
+                    print(f"[{color(style='purple', text='BABYMETALSTORE')}] [{color(style='fail', text='OUT OF STOCK')}] {products.get(value, placeholder).name}") 
             
-
-        print("here")
-        time.sleep(3)
 
         print(
                 f"\n[{color(style='cyan', text='SYSTEM')}] Waiting {color(style='blue', text=config['settings']['cooldown'])} seconds\n"
             )
 
         time.sleep(config["settings"]["cooldown"])
+
+elif option == "2":
+    print("yay")
+
+elif option == "3":
+    print(f"made by {color(style='purple', text='8o5')} and {color(style='cyan', text='curiositIy')}")
+
+else:
+    print(color(style='fail', text='ERROR: INVALID OPTION'))
