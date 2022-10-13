@@ -83,7 +83,6 @@ if option == "1":
                             site_img=products.get(value, placeholder).site_img, 
                         )
                 
-                print()
         
 
             elif i == __sites__[1]: # babymetal
@@ -106,6 +105,9 @@ if option == "1":
 
                     print(f"[{color(style='purple', text=i.capitalize())}] {color(style='green', text='SCANNING')} {products.get(value, placeholder).name}") 
 
+                    print("here")
+                    time.sleep(3)
+
                     if config["settings"]["webhooks"] == True:
 
                         startScanning(
@@ -118,7 +120,6 @@ if option == "1":
                             site_img=products.get(value, placeholder).site_img, 
                         )
                 
-                print()
             
             else:
                 products = None
@@ -141,44 +142,42 @@ if option == "1":
 
     if init == None:
         raise Exception(f"init == {init}")
-    
-    products = init[0] 
-    print("returned")
-    time.sleep(3)
 
+    print()
 
     while True:
         
         print(colortime())
 
         if lengths["polyphia"] > 0:
-            for value in polyphia_query:
 
+            for value in polyphia_query:
+                products = init[0]
                 if products.get(value, placeholder).instock == "IN STOCK": 
                     notify(products=products, current=value)
                     print(f"[{color(style='purple', text='Polyphia')}] [{color(style='green', text='IN STOCK')}] {products.get(value, placeholder).name}") 
 
                 elif products.get(value, placeholder).instock == "OOS":
                     print(f"[{color(style='purple', text='Polyphia')}] [{color(style='fail', text='OUT OF STOCK')}] {products.get(value, placeholder).name}") 
-            
-            print(
-                f"\n[{color(style='cyan', text='SYSTEM')}] Waiting {color(style='blue', text=config['settings']['cooldown'])} seconds\n"
-            )
+
         
         if lengths["babymetal"] > 0:
-
+            
             for value in babymetal_query:
-
+                products = init[1]
                 if products.get(value, placeholder).instock == "IN STOCK": 
-                    notify(products=products, current=value)
+                    # notify(products=products, current=value)
                     print(f"[{color(style='purple', text='BABYMETAL')}] [{color(style='green', text='IN STOCK')}] {products.get(value, placeholder).name}") 
 
                 elif products.get(value, placeholder).instock == "OOS":
                     print(f"[{color(style='purple', text='BABYMETAL')}] [{color(style='fail', text='OUT OF STOCK')}] {products.get(value, placeholder).name}") 
             
-            print(
+
+        print("here")
+        time.sleep(3)
+
+        print(
                 f"\n[{color(style='cyan', text='SYSTEM')}] Waiting {color(style='blue', text=config['settings']['cooldown'])} seconds\n"
             )
-
 
         time.sleep(config["settings"]["cooldown"])

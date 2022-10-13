@@ -111,10 +111,14 @@ def scrapeProducts(site): # make it vary depending on what site it is, idk if mu
 
                     img_href = product_data.contents[1].contents[1].contents[1].attrs["src"]
 
-                    if product_data.contents[11].contents[7].contents[3].contents[1].contents[0] == "Sold out": # http://schema.org/InStock
-                        instock = "OOS"
-                    else:
-                        instock = "IN STOCK"
+                    # if product_data.contents[1].contents[3].contents[3].contents[1].contents[1].contents[3].contents[0] == "Sold out": # http://schema.org/InStock
+                    #     instock = "OOS"
+                    # else:
+                    #     instock = "IN STOCK"
+
+                    instock = "IN STOCK" # this shit never go out of stock prob made to order
+
+                    price = product_data.contents[1].contents[3].contents[3].contents[1].attrs['content']
 
                     data.update(
                         {
@@ -122,12 +126,12 @@ def scrapeProducts(site): # make it vary depending on what site it is, idk if mu
                             "url": product_data.contents[1].attrs["href"],
                             "img": f"https:{img_href}",
                             "instock": instock,
-                            "price": product_data.contents[11].contents[1].contents[3].contents[1].contents[0][:-1],
+                            "price": f"{price} USD",
                             "site_img": f"https:{site_img_src}",
                         }
                     )
                     my_product = Product(data)
-                    products.update({f"https://www.polyphia.com{product_data.contents[1].attrs['href']}": my_product})
+                    products.update({f"https://babymetalstore.com{product_data.contents[1].attrs['href']}": my_product})
 
         return products
 
@@ -216,8 +220,6 @@ def scrapeCollections(site, list_collections, all_list_collections):
                     name = str.strip(collection.text)
                     url_loc = collection.contents[1]
                     collection_img = collection.contents[1].contents[1]
-                    print("here") # debug
-                    time.sleep(3)
 
                     if collection_img["src"] != '//cdn.shopify.com/shopifycloud/shopify/assets/no-image-2048-5e88c1b20e087fb7bbe9a3771824e743c244f437e4f8ba93bbf7b11b53f7824c_580x.gif': 
                         newCollection(site="babymetalstore", name=name, url=f"https://babymetalstore.com{url_loc['href']}")
